@@ -26,7 +26,7 @@ repositories:
   universe/autoware.universe:
     type: git
     url: git@github.com:Futu-reADS/autoware.universe.git
-    version: 2024.05 # DONE
+    version: 2024.05
   universe/external/tier4_ad_api_adaptor:
     type: git
     url: git@github.com:Futu-reADS/tier4_ad_api_adaptor.git
@@ -74,7 +74,7 @@ repositories:
   launcher/autoware_launch:
     type: git
     url: git@github.com:Futu-reADS/autoware_launch.FTD.git
-    version: 2024.05 # DONE
+    version: 2024.05
   sensor_component/external/sensor_component_description:
     type: git
     url: git@github.com:Futu-reADS/sensor_component_description.git
@@ -117,14 +117,14 @@ repositories:
     type: git
     url: git@github.com:Futu-reADS/HesaiLidar_ROS_2.0.git
     version: hesai_future
-#  future_packages/ifb_driver_package:
-#    type: git
-#    url: git@github.com:Futu-reADS/ifb_driver_package.git
-#    version: dev/deli1/china_test_3
-#  future_packages/master_planner:
-#    type: git
-#    url: git@github.com:Futu-reADS/master_planner.git
-#    version: dev/ftd/china_test_3
+  future_packages/ifb_driver_package:
+    type: git
+    url: git@github.com:Futu-reADS/ifb_driver_package.git
+    version: 2024.05
+  future_packages/master_planner:
+    type: git
+    url: git@github.com:Futu-reADS/master_planner.git
+    version: 2024.05
 #  # UI
 #  future_packages/user_interface/ftd_ui_frontend:
 #    type: git
@@ -138,4 +138,3 @@ repositories:
 #    type: git
 #    url: git@github.com:Futu-reADS/run_autoware_script.git
 #    version: 2024.05
-TEST
