@@ -74,7 +74,7 @@ repositories:
   launcher/autoware_launch:
     type: git
     url: git@github.com:Futu-reADS/autoware_launch.FTD.git
-    version: 2024.05
+    version: dev/okinawa_testbed
   sensor_component/external/sensor_component_description:
     type: git
     url: git@github.com:Futu-reADS/sensor_component_description.git
@@ -92,10 +92,10 @@ repositories:
     type: git
     url: git@github.com:Futu-reADS/sample_sensor_kit_launch.git
     version: 2024.05
-  sensor_kit/ftd_sensor_kit_launch: 
+  sensor_kit/ftd_sensor_kit_launch:
     type: git
     url: git@github.com:Futu-reADS/ftd_sensor_kit_launch.git
-    version: 2024.05
+    version: dev/okinawa_testbed
   # vehicle
   vehicle/sample_vehicle_launch:
     type: git
@@ -108,7 +108,7 @@ repositories:
   param/autoware_individual_params:
     type: git
     url: git@github.com:Futu-reADS/autoware_individual_params.git
-    version: 2024.05
+    version: dev/okinawa_testbed
   future_packages/ft_maps:
     type: git
     url: git@github.com:Futu-reADS/ft_maps.git
@@ -117,6 +117,19 @@ repositories:
     type: git
     url: git@github.com:Futu-reADS/HesaiLidar_ROS_2.0.git
     version: hesai_future
+  sensor_component/external/ydlidar/YDLidar-SDK:
+    type: git
+    url: git@github.com:Futu-reADS/YDLidar-SDK.git
+    version: master
+  sensor_component/external/ydlidar/ydlidar_ros2_driver:
+    type: git
+    url: git@github.com:Futu-reADS/ydlidar_ros2_driver.git
+    version: dev/okinawa_testbed
+  sensor_component/external/witmotion_IMU_ros:
+    type: git
+    url: git@github.com:Futu-reADS/witmotion_IMU_ros.git
+    version: dev/okinawa_testbed
+
   future_packages/ifb_driver_package:
     type: git
     url: git@github.com:Futu-reADS/ifb_driver_package.git
