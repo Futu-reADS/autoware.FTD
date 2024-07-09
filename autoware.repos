@@ -117,6 +117,18 @@ repositories:
     type: git
     url: git@github.com:Futu-reADS/HesaiLidar_ROS_2.0.git
     version: hesai_future
+  sensor_component/external/ydlidar/YDLidar-SDK:
+    type: git
+    url: git@github.com:Futu-reADS/YDLidar-SDK.git
+    version: master
+  sensor_component/external/ydlidar/ydlidar_ros2_driver:
+    type: git
+    url: git@github.com:Futu-reADS/ydlidar_ros2_driver.git
+    version: 2024.05
+  sensor_component/external/witmotion_IMU_ros:
+    type: git
+    url: git@github.com:Futu-reADS/witmotion_IMU_ros.git
+    version: 2024.05
   future_packages/ifb_driver_package:
     type: git
     url: git@github.com:Futu-reADS/ifb_driver_package.git

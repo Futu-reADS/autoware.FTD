@@ -1,5 +1,5 @@
 repositories:
   tools:
     type: git
-    url: https://github.com/autowarefoundation/autoware_tools.git
+    url: git@github.com:Futu-reADS/autoware_tools.git
     version: d4d11193b25c05ee0b99766c22c864a0fc9d591b
