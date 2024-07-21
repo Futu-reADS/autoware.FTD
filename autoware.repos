@@ -26,7 +26,7 @@ repositories:
   universe/autoware.universe:
     type: git
     url: git@github.com:Futu-reADS/autoware.universe.git
-    version: 2024.05
+    version: okinawa
   universe/external/tier4_ad_api_adaptor:
     type: git
     url: git@github.com:Futu-reADS/tier4_ad_api_adaptor.git
@@ -74,7 +74,7 @@ repositories:
   launcher/autoware_launch:
     type: git
     url: git@github.com:Futu-reADS/autoware_launch.FTD.git
-    version: 2024.05
+    version: okinawa
   sensor_component/external/sensor_component_description:
     type: git
     url: git@github.com:Futu-reADS/sensor_component_description.git
