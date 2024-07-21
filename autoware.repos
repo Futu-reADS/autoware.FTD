@@ -95,7 +95,7 @@ repositories:
   sensor_kit/ftd_sensor_kit_launch: 
     type: git
     url: git@github.com:Futu-reADS/ftd_sensor_kit_launch.git
-    version: 2024.05
+    version: okinawa_test
   # vehicle
   vehicle/sample_vehicle_launch:
     type: git
@@ -108,7 +108,7 @@ repositories:
   param/autoware_individual_params:
     type: git
     url: git@github.com:Futu-reADS/autoware_individual_params.git
-    version: 2024.05
+    version: okinawa
   future_packages/ft_maps:
     type: git
     url: git@github.com:Futu-reADS/ft_maps.git
@@ -149,4 +149,4 @@ repositories:
   future_packages/run_autoware_script:
     type: git
     url: git@github.com:Futu-reADS/run_autoware_script.git
-    version: 2024.05
+    version: okinawa
