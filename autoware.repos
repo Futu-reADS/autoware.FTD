@@ -74,7 +74,7 @@ repositories:
   launcher/autoware_launch:
     type: git
     url: git@github.com:Futu-reADS/autoware_launch.FTD.git
-    version: okinawa
+    version: dev/okinawa_ap
   sensor_component/external/sensor_component_description:
     type: git
     url: git@github.com:Futu-reADS/sensor_component_description.git
