@@ -166,8 +166,12 @@ repositories:
     type: git
     url: git@github.com:Futu-reADS/emergency_handler_node.git
     version: main
-  future_packages/jbd_bms_ros:
+  future_packages/battery/jbd_bms_ros:
     type: git
     url: git@github.com:Futu-reADS/jbd_bms_ros.git
-    version: ros2_humble
+    version: dev/fixing_crash
+  future_packages/battery/serial-ros2:
+    type: git
+    url: git@github.com:Futu-reADS/serial-ros2.git
+    version: master
     
