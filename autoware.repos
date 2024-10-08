@@ -136,7 +136,7 @@ repositories:
   future_packages/master_planner:
     type: git
     url: git@github.com:Futu-reADS/master_planner.git
-    version: 2024.05
+    version: ftd_master_planner_pan
 #  # UI
 #  future_packages/user_interface/ftd_ui_frontend:
 #    type: git
@@ -146,11 +146,28 @@ repositories:
 #    type: git
 #    url: git@github.com:Futu-reADS/ftd_bridge_backend.git
 #    version: ftd_ui_backend_pan
+  future_packages/user_interface/ftd_ui_frontend-ts:
+    type: git
+    url: git@github.com:Futu-reADS/ftd_ui_frontend-ts.git
+    version: ui-changes
+  future_packages/user_interface/ftd_bridge_mw:
+    type: git
+    url: git@github.com:Futu-reADS/ftd_bridge_mw.git
+    version: develop
   future_packages/run_autoware_script:
     type: git
     url: git@github.com:Futu-reADS/run_autoware_script.git
-    version: 2024.05
+    version: dev/laptop_sim
   future_packages/pointcloud_augmentor:
     type: git
     url: git@github.com:Futu-reADS/pointcloud_augmentor.git
     version: main
+  future_packages/emergency_handler_node:
+    type: git
+    url: git@github.com:Futu-reADS/emergency_handler_node.git
+    version: main
+  future_packages/jbd_bms_ros:
+    type: git
+    url: git@github.com:Futu-reADS/jbd_bms_ros.git
+    version: ros2_humble
+    
