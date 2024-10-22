@@ -149,7 +149,7 @@ repositories:
   future_packages/run_autoware_script:
     type: git
     url: git@github.com:Futu-reADS/run_autoware_script.git
-    version: dev/laptop_sim
+    version: dev/laptop/parcelpal
   future_packages/pointcloud_augmentor:
     type: git
     url: git@github.com:Futu-reADS/pointcloud_augmentor.git
