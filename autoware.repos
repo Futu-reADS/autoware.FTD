@@ -95,7 +95,7 @@ repositories:
   sensor_kit/ftd_sensor_kit_launch: 
     type: git
     url: git@github.com:Futu-reADS/ftd_sensor_kit_launch.git
-    version: 2024.05
+    version: parcelpal
   # vehicle
   vehicle/sample_vehicle_launch:
     type: git
@@ -104,11 +104,11 @@ repositories:
   vehicle/ftd_vehicle_launch:
     type: git
     url: git@github.com:Futu-reADS/ftd_vehicle_launch.git
-    version: 2024.05
+    version: parcelpal
   param/autoware_individual_params:
     type: git
     url: git@github.com:Futu-reADS/autoware_individual_params.git
-    version: 2024.05
+    version: parcelpal
   future_packages/ft_maps:
     type: git
     url: git@github.com:Futu-reADS/ft_maps.git
@@ -141,7 +141,7 @@ repositories:
   future_packages/user_interface/ftd_ui_frontend-ts:
     type: git
     url: git@github.com:Futu-reADS/ftd_ui_frontend-ts.git
-    version: develop
+    version: ui-changes
   future_packages/user_interface/ftd_bridge_mw:
     type: git
     url: git@github.com:Futu-reADS/ftd_bridge_mw.git
