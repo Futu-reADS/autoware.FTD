@@ -146,6 +146,10 @@ repositories:
     type: git
     url: git@github.com:Futu-reADS/ftd_bridge_mw.git
     version: develop
+  future_packages/user_interface/serialport-backend:
+    type: git
+    url: git@github.com:Futu-reADS/serialport-backend.git
+    version: main
   future_packages/run_autoware_script:
     type: git
     url: git@github.com:Futu-reADS/run_autoware_script.git
