@@ -141,7 +141,7 @@ repositories:
   future_packages/user_interface/ftd_ui_frontend-ts:
     type: git
     url: git@github.com:Futu-reADS/ftd_ui_frontend-ts.git
-    version: ui-changes
+    version: develop
   future_packages/user_interface/ftd_bridge_mw:
     type: git
     url: git@github.com:Futu-reADS/ftd_bridge_mw.git
