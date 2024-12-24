@@ -174,4 +174,7 @@ repositories:
     type: git
     url: git@github.com:Futu-reADS/ehmi_driver_package.git
     version: dev/withUI
-    
+  future_packages/parcelpal_stop_editor:
+    type: git
+    url: git@github.com:Futu-reADS/parcelpal_stop_editor.git
+    version: main
