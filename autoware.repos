@@ -88,27 +88,27 @@ repositories:
     url: git@github.com:Futu-reADS/transport_drivers.git
     version: 2024.05
   # sensor_kit
-  sensor_kit/sample_sensor_kit_launch:
-    type: git
-    url: git@github.com:Futu-reADS/sample_sensor_kit_launch.git
-    version: 2024.05
+#  sensor_kit/sample_sensor_kit_launch:
+#    type: git
+#    url: git@github.com:Futu-reADS/sample_sensor_kit_launch.git
+#    version: 2024.05
   sensor_kit/ftd_sensor_kit_launch: 
     type: git
     url: git@github.com:Futu-reADS/ftd_sensor_kit_launch.git
-    version: 2024.05
+    version: parcelpal_sim
   # vehicle
-  vehicle/sample_vehicle_launch:
-    type: git
-    url: git@github.com:Futu-reADS/sample_vehicle_launch.git
-    version: 2024.05
+#  vehicle/sample_vehicle_launch:
+#    type: git
+#    url: git@github.com:Futu-reADS/sample_vehicle_launch.git
+#    version: 2024.05
   vehicle/ftd_vehicle_launch:
     type: git
     url: git@github.com:Futu-reADS/ftd_vehicle_launch.git
-    version: 2024.05
+    version: parcelpal_sim
   param/autoware_individual_params:
     type: git
     url: git@github.com:Futu-reADS/autoware_individual_params.git
-    version: 2024.05
+    version: parcelpal_sim
   future_packages/ft_maps:
     type: git
     url: git@github.com:Futu-reADS/ft_maps.git
@@ -136,7 +136,7 @@ repositories:
   future_packages/master_planner:
     type: git
     url: git@github.com:Futu-reADS/master_planner.git
-    version: ftd_master_planner_pan
+    version: 2024.05
 #  # UI
   future_packages/user_interface/ftd_ui_frontend-ts:
     type: git
@@ -146,10 +146,14 @@ repositories:
     type: git
     url: git@github.com:Futu-reADS/ftd_bridge_mw.git
     version: develop
+  future_packages/user_interface/serialport-backend:
+    type: git
+    url: git@github.com:Futu-reADS/serialport-backend.git
+    version: main
   future_packages/run_autoware_script:
     type: git
     url: git@github.com:Futu-reADS/run_autoware_script.git
-    version: dev/laptop_sim
+    version: dev/laptop/parcelpal
   future_packages/pointcloud_augmentor:
     type: git
     url: git@github.com:Futu-reADS/pointcloud_augmentor.git
@@ -170,4 +174,7 @@ repositories:
     type: git
     url: git@github.com:Futu-reADS/ehmi_driver_package.git
     version: dev/withUI
-    
+  future_packages/parcelpal_stop_editor:
+    type: git
+    url: git@github.com:Futu-reADS/parcelpal_stop_editor.git
+    version: main
