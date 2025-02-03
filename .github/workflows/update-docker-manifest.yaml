@@ -2,17 +2,17 @@ name: update-docker-manifest
 
 on:
   schedule:
-    - cron: 0 0 * * *
+    - cron: 0 */2 * * *
   workflow_dispatch:
 
 jobs:
   update-docker-manifest:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Combine multi arch images for 'autoware-openadk'
+      - name: Combine multi arch images for 'Autoware'
         uses: ./.github/actions/combine-multi-arch-images
         with:
-          package-name: autoware-openadk
+          package-name: autoware

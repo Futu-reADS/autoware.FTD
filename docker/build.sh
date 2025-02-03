@@ -16,7 +16,7 @@ print_help() {
 }
 
 SCRIPT_DIR=$(readlink -f "$(dirname "$0")")
-WORKSPACE_ROOT="$SCRIPT_DIR/../"
+WORKSPACE_ROOT="$SCRIPT_DIR/.."
 
 # Parse arguments
 parse_arguments() {
@@ -59,7 +59,7 @@ set_cuda_options() {
 # Set build options
 set_build_options() {
     if [ "$option_devel_only" = "true" ]; then
-        targets=("devel")
+        targets=("universe-devel")
     else
         targets=()
     fi
@@ -97,6 +97,19 @@ load_env() {
     fi
 }
 
+# Clone repositories
+clone_repositories() {
+    cd "$WORKSPACE_ROOT"
+    if [ ! -d "src" ]; then
+        mkdir -p src
+        vcs import src <autoware.repos
+    else
+        echo "Source directory already exists. Updating repositories..."
+        vcs import src <autoware.repos
+        vcs pull src
+    fi
+}
+
 # Build images
 build_images() {
     # https://github.com/docker/buildx/issues/484
@@ -111,7 +124,7 @@ build_images() {
     echo "Targets: ${targets[*]}"
 
     set -x
-    docker buildx bake --load --progress=plain -f "$SCRIPT_DIR/autoware-openadk/docker-bake.hcl" \
+    docker buildx bake --load --progress=plain -f "$SCRIPT_DIR/docker-bake.hcl" \
         --set "*.context=$WORKSPACE_ROOT" \
         --set "*.ssh=default" \
         --set "*.platform=$platform" \
@@ -119,11 +132,16 @@ build_images() {
         --set "*.args.BASE_IMAGE=$base_image" \
         --set "*.args.SETUP_ARGS=$setup_args" \
         --set "*.args.LIB_DIR=$lib_dir" \
-        --set "devel.tags=ghcr.io/autowarefoundation/autoware-openadk:latest-devel$image_name_suffix" \
-        --set "prebuilt.tags=ghcr.io/autowarefoundation/autoware-openadk:latest-prebuilt$image_name_suffix" \
-        --set "runtime.tags=ghcr.io/autowarefoundation/autoware-openadk:latest-runtime$image_name_suffix" \
+        --set "base.tags=ghcr.io/autowarefoundation/autoware:base" \
+        --set "universe-devel.tags=ghcr.io/autowarefoundation/autoware:universe-devel$image_name_suffix" \
+        --set "universe.tags=ghcr.io/autowarefoundation/autoware:universe$image_name_suffix" \
         "${targets[@]}"
     set +x
+}
+
+# Remove dangling images
+remove_dangling_images() {
+    docker image prune -f
 }
 
 # Main script execution
@@ -133,4 +151,6 @@ set_build_options
 set_platform
 set_arch_lib_dir
 load_env
+clone_repositories
 build_images
+remove_dangling_images
