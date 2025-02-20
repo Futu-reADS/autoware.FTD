@@ -1,4 +1,5 @@
 repositories:
+# autoware core
   core/autoware_msgs:
     type: git
     url: git@github.com:Futu-reADS/autoware_msgs.git
@@ -23,6 +24,7 @@ repositories:
     type: git
     url: git@github.com:Futu-reADS/autoware_auto_msgs.git
     version: 2024.05
+# autoware universe
   universe/autoware.universe:
     type: git
     url: git@github.com:Futu-reADS/autoware.universe.git
@@ -71,10 +73,12 @@ repositories:
     type: git
     url: git@github.com:Futu-reADS/glog.git
     version: 2024.05
+# launch
   launcher/autoware_launch:
     type: git
     url: git@github.com:Futu-reADS/autoware_launch.FTD.git
     version: 2024.05
+# sensors
   sensor_component/external/sensor_component_description:
     type: git
     url: git@github.com:Futu-reADS/sensor_component_description.git
@@ -87,32 +91,10 @@ repositories:
     type: git
     url: git@github.com:Futu-reADS/transport_drivers.git
     version: 2024.05
-  # sensor_kit
-#  sensor_kit/sample_sensor_kit_launch:
-#    type: git
-#    url: git@github.com:Futu-reADS/sample_sensor_kit_launch.git
-#    version: 2024.05
-  sensor_kit/ftd_sensor_kit_launch: 
+  sensor_kit/ftd_sensor_kit_launch:
     type: git
     url: git@github.com:Futu-reADS/ftd_sensor_kit_launch.git
     version: parcelpal_sim
-  # vehicle
-#  vehicle/sample_vehicle_launch:
-#    type: git
-#    url: git@github.com:Futu-reADS/sample_vehicle_launch.git
-#    version: 2024.05
-  vehicle/ftd_vehicle_launch:
-    type: git
-    url: git@github.com:Futu-reADS/ftd_vehicle_launch.git
-    version: parcelpal_sim
-  param/autoware_individual_params:
-    type: git
-    url: git@github.com:Futu-reADS/autoware_individual_params.git
-    version: parcelpal_sim
-  future_packages/ft_maps:
-    type: git
-    url: git@github.com:Futu-reADS/ft_maps.git
-    version: 2024.05
   sensor_component/external/hesai:
     type: git
     url: git@github.com:Futu-reADS/HesaiLidar_ROS_2.0.git
@@ -129,6 +111,20 @@ repositories:
     type: git
     url: git@github.com:Futu-reADS/witmotion_IMU_ros.git
     version: 2024.05
+# vehicle
+  vehicle/ftd_vehicle_launch:
+    type: git
+    url: git@github.com:Futu-reADS/ftd_vehicle_launch.git
+    version: parcelpal_sim
+  param/autoware_individual_params:
+    type: git
+    url: git@github.com:Futu-reADS/autoware_individual_params.git
+    version: parcelpal_sim
+# future packages
+  future_packages/ft_maps:
+    type: git
+    url: git@github.com:Futu-reADS/ft_maps.git
+    version: 2024.05
   future_packages/ifb_driver_package:
     type: git
     url: git@github.com:Futu-reADS/ifb_driver_package.git
@@ -137,19 +133,6 @@ repositories:
     type: git
     url: git@github.com:Futu-reADS/master_planner.git
     version: 2024.05
-#  # UI
-  future_packages/user_interface/ftd_ui_frontend-ts:
-    type: git
-    url: git@github.com:Futu-reADS/ftd_ui_frontend-ts.git
-    version: develop
-  future_packages/user_interface/ftd_bridge_mw:
-    type: git
-    url: git@github.com:Futu-reADS/ftd_bridge_mw.git
-    version: develop
-  future_packages/user_interface/serialport-backend:
-    type: git
-    url: git@github.com:Futu-reADS/serialport-backend.git
-    version: main
   future_packages/run_autoware_script:
     type: git
     url: git@github.com:Futu-reADS/run_autoware_script.git
@@ -165,7 +148,7 @@ repositories:
   future_packages/battery/jbd_bms_ros:
     type: git
     url: git@github.com:Futu-reADS/jbd_bms_ros.git
-    version: dev/fixing_crash
+    version: 2024.05
   future_packages/battery/serial-ros2:
     type: git
     url: git@github.com:Futu-reADS/serial-ros2.git
@@ -173,8 +156,21 @@ repositories:
   future_packages/ehmi/ehmi_driver_package:
     type: git
     url: git@github.com:Futu-reADS/ehmi_driver_package.git
-    version: dev/withUI
-  future_packages/parcelpal_stop_editor:
+    version: main
+#  UI
+  future_packages/user_interface/ftd_ui_frontend-ts:
     type: git
-    url: git@github.com:Futu-reADS/parcelpal_stop_editor.git
+    url: git@github.com:Futu-reADS/ftd_ui_frontend-ts.git
+    version: develop
+  future_packages/user_interface/ftd_bridge_mw:
+    type: git
+    url: git@github.com:Futu-reADS/ftd_bridge_mw.git
+    version: develop
+  future_packages/user_interface/serialport-backend:
+    type: git
+    url: git@github.com:Futu-reADS/serialport-backend.git
+    version: main
+  future_packages/shutdown_handler_node:
+    type: git
+    url: git@github.com:Futu-reADS/shutdown_handler_node.git
     version: main
