@@ -15,7 +15,7 @@
     type: git
     url: git@github.com:Futu-reADS/parcelpal_test_tools.git
     version: main
-  future_packages/pointcloud_map_sweeper:
+  future_tools/pointcloud_map_sweeper:
     type: git
     url: git@github.com:Futu-reADS/pointcloud_map_sweeper.git
     version: main
