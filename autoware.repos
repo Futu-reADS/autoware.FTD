@@ -24,6 +24,14 @@ repositories:
     type: git
     url: git@github.com:Futu-reADS/autoware_auto_msgs.git
     version: 2024.05
+  core/external/autoware_bridge_msgs:
+    type: git
+    url: git@github.com:Futu-reADS/autoware_bridge_msgs.git
+    version: main
+  core/external/ftd_master_msgs:
+    type: git
+    url: git@github.com:Futu-reADS/ftd_master_msgs.git
+    version: main
 # autoware universe
   universe/autoware.universe:
     type: git
@@ -157,6 +165,10 @@ repositories:
     type: git
     url: git@github.com:Futu-reADS/ehmi_driver_package.git
     version: main
+  future_packages/autoware_bridge:
+    type: git
+    url: git@github.com:Futu-reADS/autoware_bridge.git
+    version: main_sub
 #  UI
   future_packages/user_interface/ftd_ui_frontend-ts:
     type: git
