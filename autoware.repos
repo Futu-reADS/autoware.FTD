@@ -132,7 +132,7 @@ repositories:
   future_packages/ft_maps:
     type: git
     url: git@github.com:Futu-reADS/ft_maps.git
-    version: binhai_sim
+    version: okinawa
   future_packages/ifb_driver_package:
     type: git
     url: git@github.com:Futu-reADS/ifb_driver_package.git

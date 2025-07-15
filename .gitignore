@@ -26,3 +26,5 @@ capture/
 
 # Node.js
 node_modules/
+
+log.log
