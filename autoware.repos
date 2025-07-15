@@ -160,7 +160,7 @@ repositories:
   future_packages/ehmi/ehmi_driver_package:
     type: git
     url: git@github.com:Futu-reADS/ehmi_driver_package.git
-    version: main
+    version: dev/withUI
   future_packages/autoware_bridge:
     type: git
     url: git@github.com:Futu-reADS/autoware_bridge.git
