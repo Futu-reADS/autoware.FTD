@@ -1,3 +1,4 @@
+repositories:
 # tools
   future_tools/parcelpal_stop_editor:
     type: git
