@@ -1,3 +1,4 @@
+repositories:
 # tools
   future_tools/parcelpal_stop_editor:
     type: git
@@ -6,10 +7,6 @@
   future_tools/lanelet-generator-tools:
     type: git
     url: git@github.com:Futu-reADS/lanelet-generator-tools.git
-    version: main
-  future_tools/parcelpal_stop_editor:
-    type: git
-    url: git@github.com:Futu-reADS/parcelpal_stop_editor.git
     version: main
   future_tools/parcelpal_test_tools:
     type: git
