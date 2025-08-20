@@ -168,7 +168,7 @@ repositories:
   future_packages/ftd_parcelpal_ui:
     type: git
     url: git@github.com:Futu-reADS/ftd_parcelpal_ui.git
-    version: main
+    version: develop
   future_packages/shutdown_handler_node:
     type: git
     url: git@github.com:Futu-reADS/shutdown_handler_node.git
@@ -180,4 +180,4 @@ repositories:
   future_packages/fault_detection:
     type: git
     url: git@github.com:Futu-reADS/fault_detection.git
-    version: main
+    version: develop
