@@ -5,6 +5,7 @@ After=network.target
 
 [Service]
 Type=simple
+ExecStartPre=/bin/sleep 10
 ExecStart=/bin/bash /home/parcelpaler/autoware.FTD/src/future_packages/run_autoware_script/script/run_autoware.sh
 WorkingDirectory=/home/parcelpaler/autoware.FTD/src/future_packages/run_autoware_script/script
 Restart=on-failure
