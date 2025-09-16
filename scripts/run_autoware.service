@@ -1,0 +1,20 @@
+sudo tee /etc/systemd/system/run_autoware.service > /dev/null <<'EOF'
+[Unit]
+Description=Run Autoware start script
+After=network.target
+# If Autoware needs GUI, change After= to graphical.target or kiosk.service
+
+[Service]
+Type=simple
+ExecStart=/bin/bash /home/parcelpaler/autoware.FTD/src/future_packages/run_autoware_script/script/run_autoware.sh
+WorkingDirectory=/home/parcelpaler/autoware.FTD/src/future_packages/run_autoware_script/script
+Restart=on-failure
+RestartSec=5
+User=root
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo systemctl daemon-reload
+sudo systemctl enable run_autoware.service

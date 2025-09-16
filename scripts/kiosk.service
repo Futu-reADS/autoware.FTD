@@ -1,0 +1,23 @@
+sudo tee /etc/systemd/system/kiosk.service > /dev/null <<'EOF'
+[Unit]
+Description=Kiosk session: chromium on display :0
+After=network.target
+
+[Service]
+User=parcelpaler
+Group=parcelpaler
+Environment=DISPLAY=:0
+ExecStart=/usr/bin/xinit /home/parcelpaler/.xinitrc -- :0 vt1 -nolisten tcp
+Restart=always
+RestartSec=5
+StandardOutput=syslog
+StandardError=syslog
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo systemctl daemon-reload
+sudo systemctl enable kiosk.service
+
+

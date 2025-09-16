@@ -1,11 +1,28 @@
+sudo tee /home/parcelpaler/.xinitrc > /dev/null <<'EOF'
 #!/bin/sh
-# Disable Ctrl+Alt+T and other keyboard shortcuts
-gsettings set org.gnome.desktop.wm.keybindings panel-main-menu "[]"
-gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-left "[]"
-gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-right "[]"
+# disable DPMS / screen blanking
+xset s off
+xset -dpms
+xset s noblank
 
-# Hide desktop icons
-gsettings set org.gnome.desktop.background show-desktop-icons false
+# start openbox (lightweight WM)
+openbox-session &
 
-# Start only what we need
-exec /home/gary/autoware.FTD/scripts/autoware-startup.sh
+# small delay to ensure X is ready
+sleep 5
+
+# launch Chromium in kiosk mode
+exec /usr/bin/chromium-browser \
+  --noerrdialogs \
+  --disable-infobars \
+  --disable-translate \
+  --disable-session-crashed-bubble \
+  --kiosk "http://localhost:3000" \
+  --incognito \
+  --no-first-run \
+  --user-data-dir=/home/parcelpaler/.config/chromium-kiosk
+EOF
+
+sudo chown parcelpaler:parcelpaler /home/parcelpaler/.xinitrc
+sudo chmod +x /home/parcelpaler/.xinitrc
+
