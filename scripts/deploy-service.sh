@@ -11,9 +11,3 @@ sleep 1
 sudo systemctl daemon-reload
 sleep 1
 sudo systemctl enable run_autoware.service
-
-# Usage:
-# Make the deployment script executable
-# chmod +x deploy-service.sh
-# Run the deployment
-# ./deploy-service.sh

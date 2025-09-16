@@ -15,8 +15,4 @@ sleep 1
 # install chromium (snap on 22.04)
 sudo apt install -y chromium-browser
 
-# Usage:
-# Make the script executable
-# chmod +x prep-setting.sh
-# Run the script
-# ./prep-setting.sh
+
