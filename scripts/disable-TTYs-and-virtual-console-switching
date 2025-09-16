@@ -4,8 +4,11 @@ sudo sed -i -e 's/^#NAutoVTs=.*$/NAutoVTs=0/' -e 's/^#ReserveVT=.*$/ReserveVT=1/
 
 sudo systemctl restart systemd-logind
 
-for i in 2 3 4 5 6; do
+# Disable TTYs 2, 4, 5, 6 (you can adjust this as needed)
+# for default there is a backdoor on TTY3 (CTRL+ALT+F3 to access shell)
+for i in 2 4 5 6; do
   sudo systemctl mask [email protected] 
 done
 
 sudo systemctl daemon-reload
+
