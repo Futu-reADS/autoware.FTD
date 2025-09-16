@@ -8,7 +8,7 @@ xset s noblank
 openbox-session &
 
 # small delay to ensure X is ready
-sleep 5
+sleep 60
 
 # launch Chromium in kiosk mode
 exec /usr/bin/chromium-browser \

@@ -23,3 +23,7 @@ chmod +x deploy-service.sh
 chmod +x disable-TTYs-and-virtual-console-switching
 # Run the script
 ./disable-TTYs-and-virtual-console-switching
+
+# Usage:
+# chmod +x autoware-set-up.sh
+# ./autoware-set-up.sh
