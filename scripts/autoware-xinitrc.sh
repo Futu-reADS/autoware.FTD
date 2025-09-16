@@ -1,4 +1,3 @@
-sudo tee /home/parcelpaler/.xinitrc > /dev/null <<'EOF'
 #!/bin/sh
 # disable DPMS / screen blanking
 xset s off
@@ -21,8 +20,7 @@ exec /usr/bin/chromium-browser \
   --incognito \
   --no-first-run \
   --user-data-dir=/home/parcelpaler/.config/chromium-kiosk
-EOF
 
-sudo chown parcelpaler:parcelpaler /home/parcelpaler/.xinitrc
-sudo chmod +x /home/parcelpaler/.xinitrc
+
+
 
