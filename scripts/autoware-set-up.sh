@@ -8,9 +8,9 @@ chmod +x prep-setting.sh
 
 # Set up autoware-xinitrc:
 # Make the deployment script executable
-chmod +x deploy_xinitrc.sh
+chmod +x deploy-autoware-xinitrc.sh
 # Run the deployment
-./deploy_xinitrc.sh
+./deploy-autoware-xinitrc.sh
 
 # Set up deploy-service:
 # Make the deployment script executable
@@ -27,3 +27,4 @@ chmod +x disable-TTYs-and-virtual-console-switching
 # Usage:
 # chmod +x autoware-set-up.sh
 # ./autoware-set-up.sh
+# warning : TRY IT ON A TEST MACHINE OR VIRTUAL MACHINE !!!!!!
