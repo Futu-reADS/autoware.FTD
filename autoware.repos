@@ -181,3 +181,7 @@ repositories:
     type: git
     url: git@github.com:Futu-reADS/fault_detection.git
     version: develop
+  future_packages/tvm_resource_client:
+    type: git
+    url: git@github.com:Futu-reADS/tvm_resource_client.git
+    version: TVM2-27
