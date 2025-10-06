@@ -172,7 +172,7 @@ repositories:
   future_packages/shutdown_handler_node:
     type: git
     url: git@github.com:Futu-reADS/shutdown_handler_node.git
-    version: main
+    version: develop
   future_packages/ftd_master:
     type: git
     url: git@github.com:Futu-reADS/ftd_master.git
