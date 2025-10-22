@@ -164,7 +164,7 @@ repositories:
   future_packages/autoware_bridge:
     type: git
     url: git@github.com:Futu-reADS/autoware_bridge.git
-    version: main_sub
+    version: develop
   future_packages/ftd_parcelpal_ui:
     type: git
     url: git@github.com:Futu-reADS/ftd_parcelpal_ui.git
