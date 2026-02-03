@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Arguments -->
+  <arg name="map_file_path" default="" description="Path to the OSM/Lanelet2 map file"/>
+  <arg name="pose_topic" default="/localization/pose_twist_fusion_filter/pose" description="Input pose topic"/>
+  <arg name="output_topic" default="/lanelet/current_info" description="Output lanelet info topic"/>
+  <arg name="search_radius" default="5.0" description="Search radius for finding nearest lanelet (meters)"/>
+  <arg name="publish_rate" default="10.0" description="Publish rate limit (Hz), 0 for unlimited"/>
+  <arg name="frame_id" default="map" description="Frame ID for output messages"/>
+  <arg name="log_level" default="info" description="Log level (debug, info, warn, error)"/>
+
+  <!-- Node -->
+  <node pkg="lanelet_id_extractor" exec="lanelet_id_extractor_node" name="lanelet_id_extractor" output="screen">
+    <param name="map_file_path" value="$(var map_file_path)"/>
+    <param name="pose_topic" value="$(var pose_topic)"/>
+    <param name="output_topic" value="$(var output_topic)"/>
+    <param name="search_radius" value="$(var search_radius)"/>
+    <param name="publish_rate" value="$(var publish_rate)"/>
+    <param name="frame_id" value="$(var frame_id)"/>
+
+    <!-- Set log level -->
+    <param name="ros.logging.severity" value="$(var log_level)"/>
+  </node>
+</launch>
