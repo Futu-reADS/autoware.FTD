@@ -1,0 +1,19 @@
+/**:
+  ros__parameters:
+    # Path to the OSM/Lanelet2 map file
+    map_file_path: ""
+
+    # Input topic for vehicle pose
+    pose_topic: "/localization/pose_twist_fusion_filter/pose"
+
+    # Output topic for lanelet information
+    output_topic: "/lanelet/current_info"
+
+    # Search radius for finding nearest lanelet (meters)
+    search_radius: 5.0
+
+    # Publish rate limit (Hz) - 0 means publish on every pose update
+    publish_rate: 10.0
+
+    # Frame ID for the output message
+    frame_id: "map"
