@@ -19,37 +19,61 @@
 
 #include "rclcpp/rclcpp.hpp"
 #include "geometry_msgs/msg/pose_with_covariance_stamped.hpp"
+#include "geometry_msgs/msg/pose_stamped.hpp"
+#include "geometry_msgs/msg/pose_with_covariance.hpp"
+#include "geometry_msgs/msg/pose.hpp"
 #include "diagnostic_msgs/msg/key_value.hpp"
 #include "lanelet_id_extractor_msgs/msg/lanelet_info.hpp"
+#include "lanelet_id_extractor_msgs/msg/lanelet_info_unstamped.hpp"
 
 #include <lanelet2_core/LaneletMap.h>
 #include <lanelet2_core/geometry/Lanelet.h>
 #include <lanelet2_core/primitives/Lanelet.h>
 #include <lanelet2_io/Io.h>
-#include <lanelet2_projection/UTM.h>
+#include <lanelet2_io/Projection.h>
 
 namespace lanelet_id_extractor
 {
+
+// Local projector for maps with local_x/local_y attributes
+// This matches Autoware's map_loader implementation
+namespace projection
+{
+class LocalProjector : public lanelet::Projector
+{
+public:
+  LocalProjector() : Projector(lanelet::Origin(lanelet::GPSPoint{})) {}
+
+  lanelet::BasicPoint3d forward(const lanelet::GPSPoint & gps) const override
+  {
+    return lanelet::BasicPoint3d{0.0, 0.0, gps.ele};
+  }
+
+  lanelet::GPSPoint reverse(const lanelet::BasicPoint3d & point) const override
+  {
+    return lanelet::GPSPoint{0.0, 0.0, point.z()};
+  }
+};
+}  // namespace projection
 
 class LaneletIdExtractorNode : public rclcpp::Node
 {
 public:
   explicit LaneletIdExtractorNode(const rclcpp::NodeOptions & options)
   : Node("lanelet_id_extractor", options),
-    map_loaded_(false)
+    map_loaded_(false),
+    last_lanelet_id_(-1)
   {
     // Declare parameters
     declare_parameter("map_file_path", "");
-    declare_parameter("pose_topic", "/localization/pose_twist_fusion_filter/pose");
-    declare_parameter("output_topic", "/lanelet/current_info");
+    declare_parameter("input_pose_type", "PoseWithCovarianceStamped");
     declare_parameter("search_radius", 5.0);
     declare_parameter("publish_rate", 10.0);
     declare_parameter("frame_id", "map");
 
     // Get parameters
     map_file_path_ = get_parameter("map_file_path").as_string();
-    const std::string pose_topic = get_parameter("pose_topic").as_string();
-    const std::string output_topic = get_parameter("output_topic").as_string();
+    input_pose_type_ = get_parameter("input_pose_type").as_string();
     search_radius_ = get_parameter("search_radius").as_double();
     publish_rate_ = get_parameter("publish_rate").as_double();
     frame_id_ = get_parameter("frame_id").as_string();
@@ -66,14 +90,14 @@ public:
       return;
     }
 
-    // Create publisher
-    publisher_ = create_publisher<lanelet_id_extractor_msgs::msg::LaneletInfo>(
-      output_topic, 10);
+    // Create dual publishers (stamped and unstamped)
+    publisher_stamped_ = create_publisher<lanelet_id_extractor_msgs::msg::LaneletInfo>(
+      "~/output/stamped", 10);
+    publisher_unstamped_ = create_publisher<lanelet_id_extractor_msgs::msg::LaneletInfoUnstamped>(
+      "~/output/unstamped", 10);
 
-    // Create subscriber
-    pose_subscriber_ = create_subscription<geometry_msgs::msg::PoseWithCovarianceStamped>(
-      pose_topic, 10,
-      std::bind(&LaneletIdExtractorNode::poseCallback, this, std::placeholders::_1));
+    // Create subscriber based on input_pose_type parameter
+    createSubscription();
 
     // Setup rate limiting if enabled
     if (publish_rate_ > 0.0) {
@@ -82,11 +106,8 @@ public:
       min_publish_interval_ = std::chrono::duration<double>(0.0);
     }
 
-    RCLCPP_INFO(get_logger(), "Lanelet ID Extractor Node initialized successfully");
-    RCLCPP_INFO(get_logger(), "Map file: %s", map_file_path_.c_str());
-    RCLCPP_INFO(get_logger(), "Loaded %zu lanelets", lanelet_map_->laneletLayer.size());
-    RCLCPP_INFO(get_logger(), "Subscribing to: %s", pose_topic.c_str());
-    RCLCPP_INFO(get_logger(), "Publishing to: %s", output_topic.c_str());
+    RCLCPP_INFO(get_logger(), "Lanelet ID Extractor initialized with %zu lanelets",
+                lanelet_map_->laneletLayer.size());
   }
 
 private:
@@ -95,12 +116,19 @@ private:
     try {
       RCLCPP_INFO(get_logger(), "Loading map from: %s", map_file_path_.c_str());
 
-      // Create UTM projector (default for most Autoware maps)
-      // You may need to adjust this based on your map's projection
-      lanelet::projection::UtmProjector projector(lanelet::Origin({0.0, 0.0}));
+      // Use LocalProjector which works with maps that have local_x/local_y attributes
+      // This matches how Autoware's map_loader handles simulator maps
+      projection::LocalProjector projector;
 
       // Load the map
-      lanelet_map_ = lanelet::load(map_file_path_, projector);
+      lanelet::ErrorMessages errors;
+      lanelet_map_ = lanelet::load(map_file_path_, projector, &errors);
+
+      if (!errors.empty()) {
+        for (const auto & error : errors) {
+          RCLCPP_WARN(get_logger(), "Map loading warning: %s", error.c_str());
+        }
+      }
 
       if (!lanelet_map_) {
         RCLCPP_ERROR(get_logger(), "Failed to load lanelet map");
@@ -109,6 +137,25 @@ private:
 
       if (lanelet_map_->laneletLayer.empty()) {
         RCLCPP_WARN(get_logger(), "Loaded map contains no lanelets");
+        return false;
+      }
+
+      // For maps with local_x/local_y attributes, overwrite coordinates
+      // This ensures consistency with Autoware's coordinate system
+      for (lanelet::Point3d point : lanelet_map_->pointLayer) {
+        if (point.hasAttribute("local_x") && point.hasAttribute("local_y")) {
+          point.x() = point.attribute("local_x").asDouble().value();
+          point.y() = point.attribute("local_y").asDouble().value();
+        }
+      }
+
+      // Realign lanelet borders using updated points
+      for (lanelet::Lanelet lanelet : lanelet_map_->laneletLayer) {
+        auto left = lanelet.leftBound();
+        auto right = lanelet.rightBound();
+        std::tie(left, right) = lanelet::geometry::align(left, right);
+        lanelet.setLeftBound(left);
+        lanelet.setRightBound(right);
       }
 
       map_loaded_ = true;
@@ -120,9 +167,70 @@ private:
     }
   }
 
-  void poseCallback(const geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr msg)
+  void createSubscription()
+  {
+    if (input_pose_type_ == "PoseWithCovarianceStamped") {
+      pose_sub_pwcs_ = create_subscription<geometry_msgs::msg::PoseWithCovarianceStamped>(
+        "~/input/pose", 10,
+        std::bind(&LaneletIdExtractorNode::poseCallbackPWCS, this, std::placeholders::_1));
+      RCLCPP_INFO(get_logger(), "Subscribed to PoseWithCovarianceStamped on ~/input/pose");
+    } else if (input_pose_type_ == "PoseStamped") {
+      pose_sub_ps_ = create_subscription<geometry_msgs::msg::PoseStamped>(
+        "~/input/pose", 10,
+        std::bind(&LaneletIdExtractorNode::poseCallbackPS, this, std::placeholders::_1));
+      RCLCPP_INFO(get_logger(), "Subscribed to PoseStamped on ~/input/pose");
+    } else if (input_pose_type_ == "PoseWithCovariance") {
+      pose_sub_pwc_ = create_subscription<geometry_msgs::msg::PoseWithCovariance>(
+        "~/input/pose", 10,
+        std::bind(&LaneletIdExtractorNode::poseCallbackPWC, this, std::placeholders::_1));
+      RCLCPP_INFO(get_logger(), "Subscribed to PoseWithCovariance on ~/input/pose");
+    } else if (input_pose_type_ == "Pose") {
+      pose_sub_p_ = create_subscription<geometry_msgs::msg::Pose>(
+        "~/input/pose", 10,
+        std::bind(&LaneletIdExtractorNode::poseCallbackP, this, std::placeholders::_1));
+      RCLCPP_INFO(get_logger(), "Subscribed to Pose on ~/input/pose");
+    } else {
+      RCLCPP_ERROR(get_logger(), "Invalid input_pose_type: %s. Valid types: PoseWithCovarianceStamped, PoseStamped, PoseWithCovariance, Pose",
+                   input_pose_type_.c_str());
+      throw std::runtime_error("Invalid input_pose_type parameter");
+    }
+  }
+
+  // Callback for PoseWithCovarianceStamped
+  void poseCallbackPWCS(const geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr msg)
+  {
+    processPose(msg->pose.pose, msg->header.stamp, msg->header.frame_id);
+  }
+
+  // Callback for PoseStamped
+  void poseCallbackPS(const geometry_msgs::msg::PoseStamped::SharedPtr msg)
+  {
+    processPose(msg->pose, msg->header.stamp, msg->header.frame_id);
+  }
+
+  // Callback for PoseWithCovariance (no header - generate timestamp)
+  void poseCallbackPWC(const geometry_msgs::msg::PoseWithCovariance::SharedPtr msg)
+  {
+    processPose(msg->pose, this->now(), frame_id_);
+  }
+
+  // Callback for Pose (no header - generate timestamp)
+  void poseCallbackP(const geometry_msgs::msg::Pose::SharedPtr msg)
+  {
+    processPose(*msg, this->now(), frame_id_);
+  }
+
+  // Common processing for all pose types
+  void processPose(const geometry_msgs::msg::Pose & pose,
+                   const rclcpp::Time & timestamp,
+                   const std::string & frame_id)
   {
     if (!map_loaded_) {
+      static bool warned = false;
+      if (!warned) {
+        RCLCPP_WARN(get_logger(), "Received pose but map not loaded yet");
+        warned = true;
+      }
       return;
     }
 
@@ -133,26 +241,46 @@ private:
     }
 
     // Extract position from pose
-    const double x = msg->pose.pose.position.x;
-    const double y = msg->pose.pose.position.y;
+    const double x = pose.position.x;
+    const double y = pose.position.y;
     lanelet::BasicPoint2d search_point(x, y);
 
-    // Find the lanelet containing this point
-    auto lanelet_info_msg = findLaneletAtPoint(search_point);
+    // Find the lanelet containing this point (returns unstamped version)
+    auto lanelet_info_unstamped = findLaneletAtPoint(search_point);
 
-    // Set header
-    lanelet_info_msg.header.stamp = msg->header.stamp;
-    lanelet_info_msg.header.frame_id = frame_id_;
+    // Update last lanelet ID
+    last_lanelet_id_ = lanelet_info_unstamped.lanelet_id;
 
-    // Publish
-    publisher_->publish(lanelet_info_msg);
+    // Create stamped version with header
+    lanelet_id_extractor_msgs::msg::LaneletInfo lanelet_info_stamped;
+    lanelet_info_stamped.header.stamp = timestamp;
+    lanelet_info_stamped.header.frame_id = frame_id;
+    copyLaneletInfo(lanelet_info_unstamped, lanelet_info_stamped);
+
+    // Publish both versions
+    publisher_stamped_->publish(lanelet_info_stamped);
+    publisher_unstamped_->publish(lanelet_info_unstamped);
     last_publish_time_ = now;
   }
 
-  lanelet_id_extractor_msgs::msg::LaneletInfo findLaneletAtPoint(
+  // Helper to copy unstamped data to stamped message
+  void copyLaneletInfo(const lanelet_id_extractor_msgs::msg::LaneletInfoUnstamped & src,
+                       lanelet_id_extractor_msgs::msg::LaneletInfo & dst)
+  {
+    dst.lanelet_id = src.lanelet_id;
+    dst.is_in_lanelet = src.is_in_lanelet;
+    dst.subtype = src.subtype;
+    dst.speed_limit = src.speed_limit;
+    dst.location = src.location;
+    dst.one_way = src.one_way;
+    dst.turn_direction = src.turn_direction;
+    dst.attributes = src.attributes;
+  }
+
+  lanelet_id_extractor_msgs::msg::LaneletInfoUnstamped findLaneletAtPoint(
     const lanelet::BasicPoint2d & point)
   {
-    lanelet_id_extractor_msgs::msg::LaneletInfo info_msg;
+    lanelet_id_extractor_msgs::msg::LaneletInfoUnstamped info_msg;
 
     // Default values (not in any lanelet)
     info_msg.lanelet_id = -1;
@@ -190,12 +318,6 @@ private:
         info_msg.lanelet_id = nearest.id();
         info_msg.is_in_lanelet = false;  // Not inside, just nearby
         extractLaneletAttributes(nearest, info_msg);
-
-        RCLCPP_DEBUG(
-          get_logger(), "Vehicle near lanelet %ld (distance: %.2f m)",
-          nearest.id(), nearby_lanelets.front().first);
-      } else {
-        RCLCPP_DEBUG(get_logger(), "No lanelet found within search radius");
       }
 
     } catch (const std::exception & e) {
@@ -207,7 +329,7 @@ private:
 
   void extractLaneletAttributes(
     const lanelet::Lanelet & lanelet,
-    lanelet_id_extractor_msgs::msg::LaneletInfo & info_msg)
+    lanelet_id_extractor_msgs::msg::LaneletInfoUnstamped & info_msg)
   {
     // Extract common attributes
     info_msg.subtype = lanelet.attributeOr("subtype", "");
@@ -223,14 +345,11 @@ private:
       kv.value = attr.second.value();
       info_msg.attributes.push_back(kv);
     }
-
-    RCLCPP_DEBUG(
-      get_logger(), "Found lanelet %ld: subtype=%s, speed_limit=%s",
-      lanelet.id(), info_msg.subtype.c_str(), info_msg.speed_limit.c_str());
   }
 
   // Parameters
   std::string map_file_path_;
+  std::string input_pose_type_;
   double search_radius_;
   double publish_rate_;
   std::string frame_id_;
@@ -239,14 +358,22 @@ private:
   lanelet::LaneletMapPtr lanelet_map_;
   bool map_loaded_;
 
-  // ROS2 interfaces
-  rclcpp::Publisher<lanelet_id_extractor_msgs::msg::LaneletInfo>::SharedPtr publisher_;
-  rclcpp::Subscription<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr
-    pose_subscriber_;
+  // ROS2 interfaces - dual publishers
+  rclcpp::Publisher<lanelet_id_extractor_msgs::msg::LaneletInfo>::SharedPtr publisher_stamped_;
+  rclcpp::Publisher<lanelet_id_extractor_msgs::msg::LaneletInfoUnstamped>::SharedPtr publisher_unstamped_;
+
+  // Subscriptions (only one active based on input_pose_type)
+  rclcpp::Subscription<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr pose_sub_pwcs_;
+  rclcpp::Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr pose_sub_ps_;
+  rclcpp::Subscription<geometry_msgs::msg::PoseWithCovariance>::SharedPtr pose_sub_pwc_;
+  rclcpp::Subscription<geometry_msgs::msg::Pose>::SharedPtr pose_sub_p_;
 
   // Rate limiting
   std::chrono::steady_clock::time_point last_publish_time_;
   std::chrono::duration<double> min_publish_interval_;
+
+  // Status tracking
+  int64_t last_lanelet_id_;
 };
 
 }  // namespace lanelet_id_extractor

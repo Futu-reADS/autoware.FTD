@@ -3,11 +3,9 @@
     # Path to the OSM/Lanelet2 map file
     map_file_path: ""
 
-    # Input topic for vehicle pose
-    pose_topic: "/localization/pose_twist_fusion_filter/pose"
-
-    # Output topic for lanelet information
-    output_topic: "/lanelet/current_info"
+    # Input pose message type
+    # Valid types: PoseWithCovarianceStamped, PoseStamped, PoseWithCovariance, Pose
+    input_pose_type: "PoseWithCovarianceStamped"
 
     # Search radius for finding nearest lanelet (meters)
     search_radius: 5.0
@@ -15,5 +13,5 @@
     # Publish rate limit (Hz) - 0 means publish on every pose update
     publish_rate: 10.0
 
-    # Frame ID for the output message
+    # Frame ID for the output message (used when input has no header)
     frame_id: "map"

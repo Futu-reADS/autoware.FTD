@@ -1,22 +1,31 @@
 <?xml version="1.0"?>
 <launch>
   <!-- Arguments -->
-  <arg name="map_file_path" default="" description="Path to the OSM/Lanelet2 map file"/>
-  <arg name="pose_topic" default="/localization/pose_twist_fusion_filter/pose" description="Input pose topic"/>
-  <arg name="output_topic" default="/lanelet/current_info" description="Output lanelet info topic"/>
+  <arg name="map_path" default="$(env HOME)/autoware.FTD/src/future_packages/ft_maps/map" description="Map directory path"/>
+  <arg name="lanelet2_map_file" default="1.5radius_facility_sim_20260204.osm" description="Lanelet2 map filename"/>
+  <arg name="map_file_path" default="$(var map_path)/$(var lanelet2_map_file)" description="Full path to the OSM/Lanelet2 map file (auto-generated from map_path + lanelet2_map_file)"/>
+  <arg name="input_pose_type" default="PoseWithCovarianceStamped" description="Input pose message type (PoseWithCovarianceStamped, PoseStamped, PoseWithCovariance, Pose)"/>
+  <arg name="input_pose_topic" default="/localization/pose_with_covariance" description="Input pose topic (remapped to ~/input/pose)"/>
+  <arg name="output_stamped_topic" default="/lanelet/current_info" description="Output stamped lanelet info topic (remapped from ~/output/stamped)"/>
+  <arg name="output_unstamped_topic" default="/lanelet/current_info_unstamped" description="Output unstamped lanelet info topic (remapped from ~/output/unstamped)"/>
   <arg name="search_radius" default="5.0" description="Search radius for finding nearest lanelet (meters)"/>
   <arg name="publish_rate" default="10.0" description="Publish rate limit (Hz), 0 for unlimited"/>
-  <arg name="frame_id" default="map" description="Frame ID for output messages"/>
+  <arg name="frame_id" default="map" description="Frame ID for output messages (used for unstamped inputs)"/>
   <arg name="log_level" default="info" description="Log level (debug, info, warn, error)"/>
 
   <!-- Node -->
   <node pkg="lanelet_id_extractor" exec="lanelet_id_extractor_node" name="lanelet_id_extractor" output="screen">
+    <!-- Parameters -->
     <param name="map_file_path" value="$(var map_file_path)"/>
-    <param name="pose_topic" value="$(var pose_topic)"/>
-    <param name="output_topic" value="$(var output_topic)"/>
+    <param name="input_pose_type" value="$(var input_pose_type)"/>
     <param name="search_radius" value="$(var search_radius)"/>
     <param name="publish_rate" value="$(var publish_rate)"/>
     <param name="frame_id" value="$(var frame_id)"/>
+
+    <!-- Topic remappings -->
+    <remap from="~/input/pose" to="$(var input_pose_topic)"/>
+    <remap from="~/output/stamped" to="$(var output_stamped_topic)"/>
+    <remap from="~/output/unstamped" to="$(var output_unstamped_topic)"/>
 
     <!-- Set log level -->
     <param name="ros.logging.severity" value="$(var log_level)"/>

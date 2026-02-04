@@ -14,6 +14,7 @@ find_package(diagnostic_msgs REQUIRED)
 # Generate messages
 rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/LaneletInfo.msg"
+  "msg/LaneletInfoUnstamped.msg"
   DEPENDENCIES std_msgs diagnostic_msgs
 )
 
